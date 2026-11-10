@@ -1,0 +1,22 @@
+#!/bin/sh
+sspath="$HOME/media/img/ss"
+imagefile="$sspath/$(date '+%F-%H-%m-%+3N').png"
+
+selection="$(printf 'full\nwindow\nregion' | dmenu -l 3)"
+
+case $selection in
+    full)
+        maim "$imagefile"
+        xclip -sel clipb "$imagefile" -t image/png
+        ;;
+    window)
+        maim --window="$(xdotool getactivewindow)" "$imagefile"
+        xclip -sel clipb "$imagefile" -t image/png
+        ;;
+    region)
+        maim --select "$imagefile"
+        xclip -sel clipb "$imagefile" -t image/png
+        ;;
+    *)
+        ;;
+esac

@@ -1,0 +1,11 @@
+[user]
+    name = Vitor Gonçalves
+    email = vitorgnc@proton.me
+	signingkey = D38F4EFDF30F20E4783E242CCEEFEE363B78794D
+
+[init]
+	defaultBranch = master
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true

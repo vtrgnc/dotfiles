@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# ~/.config/bash/bashrc
+
+[[ $- != *i* ]] && return  # só roda em shell interativo
+
+source "$HOME/.config/bash/aliases"
+
+export HISTFILE="$HOME/.local/state/bash/history"
+if [ ! -f "$HISTFILE" ]; then mkdir -p "$(dirname "$HISTFILE")"; fi
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth:erasedups   # ignora duplicatas e comandos com espaço na frente
+shopt -s histappend                        # append em vez de overwrite entre sessões
+shopt -s cmdhist                           # comandos multi-linha viram uma entrada só
+
+shopt -s autocd
+shopt -s cdspell
+shopt -s dirspell
+shopt -s globstar
+
+bind "set completion-ignore-case on"        # completion case-insensitive
+bind "set show-all-if-ambiguous on"         # mostra opções na primeira TAB, sem precisar apertar 2x
+bind "set menu-complete-display-prefix on"
+
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+    source "/usr/share/bash-completion/bash_completion"
+elif [ -f /etc/bash_completion ]; then
+    source "/etc/bash_completion"
+fi
+
+# prompt
+C_RESET="\[\e[0m\]"
+C_USER="\[\e[38;5;214m\]"    # laranja
+C_DIR="\[\e[38;5;109m\]"     # azul claro
+C_GIT="\[\e[38;5;172m\]"     # amarelo/mostarda
+C_ERR="\[\e[38;5;167m\]"     # vermelho
+
+__git_branch() {
+    local branch
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null) || \
+    branch=$(git rev-parse --short HEAD 2>/dev/null)
+    [ -n "$branch" ] && printf " (%s)" "$branch"
+}
+
+build_prompt() {
+    local last_exit=$?
+    PS1=""
+    if [ $last_exit -ne 0 ]; then
+        PS1+="${C_ERR}[${last_exit}]${C_RESET} "
+    fi
+    PS1+="${C_USER}\u@\h${C_RESET}:${C_DIR}\w${C_RESET}"
+    PS1+="${C_GIT}\$(__git_branch)${C_RESET}"
+    if [ "$(id -u)" -eq 0 ]; then
+        PS1+=" \[\e[1;31m\]#\[\e[0m\] "
+    else
+        PS1+=" \[\e[1m\]\$\[\e[0m\] "
+    fi
+}
+PROMPT_COMMAND="build_prompt"
+
+export EDITOR=vis
+export VISUAL="st -e vis"
+
+export LESSHISTFILE="$HOME/.local/state/bash/lesshst"
+export TEXMFHOME="$XDG_DATA_HOME/texmf"
+export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
+export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
+export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
+export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+
+set bell-style none

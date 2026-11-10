@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+alias ls='eza -la --group-directories-first'
+alias grep='rg'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias mkdir='mkdir -p'
+alias p="sudo pacman"
+alias y="yay"
+
+alias g="git"
+alias gs="git status"
+alias gd="git diff"
+alias gc="git commit"
+
+wttr() {
+    curl "https://wttr.in/pinhais"
+}

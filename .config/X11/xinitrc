@@ -1,0 +1,4 @@
+xrdb -merge "$HOME/.config/Xresources" &
+gammastep -b 0.9:0.65 -t 5700:3400 -l 0:0 &
+xwallpaper --zoom "$HOME/media/wallpaper.png" &
+exec dwm
